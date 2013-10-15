@@ -51,7 +51,7 @@ sub dispatch {
             }, $json->{params});
             return $ret_cv;
         } else {  # Notification request (no response)
-            $method->(AE::cv, $json->{params});  # pass dummy cv
+            $method->(AE::cv{ $ret_cv->send(undef); }, $json->{params});
             return $ret_cv;
         }
     } catch {  # Invalid request
