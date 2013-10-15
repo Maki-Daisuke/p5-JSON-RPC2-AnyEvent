@@ -7,7 +7,7 @@ use JSON::RPC::AnyEvent::Constants qw(:all);
 my $jra = JSON::RPC::AnyEvent->new(
     echo => sub{
         my ($cv, $args) = @_;
-        $cv->($args);
+        $cv->send($args);
     },
 );
 isa_ok $jra, 'JSON::RPC::AnyEvent', 'new object';
