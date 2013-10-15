@@ -1,0 +1,68 @@
+use strict;
+use Test::More;
+
+use AnyEvent;
+use JSON::RPC::AnyEvent;
+use JSON::RPC::AnyEvent::Constants qw(:all);
+
+my $jra = JSON::RPC::AnyEvent->new(
+    echo => sub{
+        my ($cv, $args) = @_;
+        my $w; $w = AE::timer 0.5, 0, sub{ undef $w; $cv->send($args) };
+    },
+    take_long => sub{
+        my ($cv) = @_;
+        my $w; $w = AE::timer 2.0, 0, sub{ undef $w; $cv->send("OK") };
+    },
+);
+isa_ok $jra, 'JSON::RPC::AnyEvent', 'new object';
+
+
+my $first_flag = 1;
+
+my $cv1 = AE::cv;
+my $res = $jra->dispatch({
+    #jsonrpc => '2.0',  # Intentionally omitted
+    id      => 0,
+    method  => 'take_long',
+    #params  => [],     # Intentionally omitted
+})->cb(sub{
+    my $res = shift->recv;
+    
+    ok(!$first_flag, "take_long is not completed fisrt");
+    $first_flag = 0;
+    
+    isa_ok $res, 'HASH';
+    is $res->{id}, 0;
+    is $res->{result}, 'OK';
+    
+    $cv1->send;
+});
+
+
+my $cv2 = AE::cv;
+my $res = $jra->dispatch({
+    jsonrpc => '2.0',
+    id      => 1,
+    method  => 'echo',
+    params  => [qw(hoge fuga)],
+})->cb(sub{
+    my $res = shift->recv;
+    
+    ok($first_flag, "echo is completed fisrt");
+    $first_flag = 0;
+    
+    isa_ok $res, 'HASH';
+    is $res->{id}, 1;
+    isa_ok $res->{result}, 'ARRAY';
+    is $res->{result}[0], 'hoge';
+    is $res->{result}[1], 'fuga';
+    
+    $cv2->send;
+});
+
+
+$cv1->recv;
+$cv2->recv;
+
+done_testing;
