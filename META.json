@@ -62,5 +62,15 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/Maki-Daisuke/p5-JSON-RPC-AnyEvent/issues"
+      },
+      "homepage" : "https://github.com/Maki-Daisuke/p5-JSON-RPC-AnyEvent",
+      "repository" : {
+         "url" : "https://github.com/Maki-Daisuke/p5-JSON-RPC-AnyEvent.git",
+         "web" : "https://github.com/Maki-Daisuke/p5-JSON-RPC-AnyEvent"
+      }
+   },
    "version" : "0.01"
 }
