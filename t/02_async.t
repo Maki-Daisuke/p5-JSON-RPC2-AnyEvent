@@ -2,10 +2,10 @@ use strict;
 use Test::More;
 
 use AnyEvent;
-use JSON::RPC::AnyEvent;
+use JSON::RPC::AnyEvent::Server;
 use JSON::RPC::AnyEvent::Constants qw(:all);
 
-my $jra = JSON::RPC::AnyEvent->new(
+my $srv = JSON::RPC::AnyEvent::Server->new(
     echo => sub{
         my ($cv, $args) = @_;
         my $w; $w = AE::timer 0.5, 0, sub{ undef $w; $cv->send($args) };
@@ -15,13 +15,13 @@ my $jra = JSON::RPC::AnyEvent->new(
         my $w; $w = AE::timer 2.0, 0, sub{ undef $w; $cv->send("OK") };
     },
 );
-isa_ok $jra, 'JSON::RPC::AnyEvent', 'new object';
+isa_ok $srv, 'JSON::RPC::AnyEvent::Server', 'new object';
 
 
 my $first_flag = 1;
 
 my $cv1 = AE::cv;
-my $res = $jra->dispatch({
+my $res = $srv->dispatch({
     #jsonrpc => '2.0',  # Intentionally omitted
     id      => 0,
     method  => 'take_long',
@@ -41,7 +41,7 @@ my $res = $jra->dispatch({
 
 
 my $cv2 = AE::cv;
-my $res = $jra->dispatch({
+my $res = $srv->dispatch({
     jsonrpc => '2.0',
     id      => 1,
     method  => 'echo',

@@ -4,9 +4,9 @@ JSON::RPC::AnyEvent - It's new $module
 
 # SYNOPSIS
 
-    use JSON::RPC::AnyEvent;
+    use JSON::RPC::AnyEvent::Server;
 
-    my $jra = JSON::RPC::AnyEvent->new;
+    my $jra = JSON::RPC::AnyEvent::Server->new;
     $jra->register(a_method => "[param1, param2]" => sub{
         my ($cv $args_arr, $original_args) = @_;
         do_some_async_task(sub{

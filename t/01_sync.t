@@ -1,18 +1,18 @@
 use strict;
 use Test::More;
 
-use JSON::RPC::AnyEvent;
+use JSON::RPC::AnyEvent::Server;
 use JSON::RPC::AnyEvent::Constants qw(:all);
 
-my $jra = JSON::RPC::AnyEvent->new(
+my $srv = JSON::RPC::AnyEvent::Server->new(
     echo => sub{
         my ($cv, $args) = @_;
         $cv->send($args);
     },
 );
-isa_ok $jra, 'JSON::RPC::AnyEvent', 'new object';
+isa_ok $srv, 'JSON::RPC::AnyEvent::Server', 'new object';
 
-my $res = $jra->dispatch({
+my $res = $srv->dispatch({
     jsonrpc => '2.0',
     id      => 0,
     params  => [qw(hoge fuga)],
@@ -23,7 +23,7 @@ is $res->{result}, undef;
 isa_ok $res->{error}, 'HASH';
 is $res->{error}{code}, ERR_INVALID_REQUEST;
 
-$res = $jra->dispatch({
+$res = $srv->dispatch({
     jsonrpc => '2.0',
     method  => 'echo',
     id      => 1,
