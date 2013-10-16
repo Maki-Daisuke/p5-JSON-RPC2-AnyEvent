@@ -1,5 +1,5 @@
 package JSON::RPC::AnyEvent::Server::Handle;
-use 5.010000;
+use 5.010;
 use strict;
 use warnings;
 

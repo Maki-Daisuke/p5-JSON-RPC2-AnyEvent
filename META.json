@@ -4,7 +4,7 @@
       "Daisuke (yet another) Maki <maki.daisuke@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.6.7, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Minilla/v0.8.0, CPAN::Meta::Converter version 2.132830",
    "license" : [
       "perl_5"
    ],
@@ -21,7 +21,8 @@
          "share",
          "eg",
          "examples",
-         "author"
+         "author",
+         "builder"
       ]
    },
    "prereqs" : {
@@ -51,7 +52,7 @@
             "JSON" : "0",
             "Scalar::Util" : "0",
             "Try::Tiny" : "0",
-            "perl" : "5.014000"
+            "perl" : "5.010000"
          }
       },
       "test" : {
