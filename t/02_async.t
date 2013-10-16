@@ -41,7 +41,7 @@ my $res = $srv->dispatch({
 
 
 my $cv2 = AE::cv;
-my $res = $srv->dispatch({
+$res = $srv->dispatch({
     jsonrpc => '2.0',
     id      => 1,
     method  => 'echo',
