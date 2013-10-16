@@ -20,7 +20,7 @@ sub new {
     while ( @_ ) {
         my $method = shift;
         my $spec   = shift;
-        if ( reftype $spec eq 'CODE' ) {
+        if ( (reftype $spec // '') eq 'CODE' ) {
             $self->register($method, $spec);
         } else {
             $self->register($method, $spec, shift);
@@ -110,7 +110,7 @@ sub register {
         $code = $spec;
         $spec = sub{ $_[0] };
     } else {
-        $spec = _compile_argspec($spec);
+        $spec = _parse_argspec($spec);
         croak "`$code' is not CODE ref"  unless UNIVERSAL::isa($code, 'CODE');
     }
     $self->{$method} = sub{
