@@ -46,6 +46,8 @@
          },
          "requires" : {
             "AnyEvent" : "7.0",
+            "AnyEvent::Handle" : "0",
+            "Errno" : "0",
             "JSON" : "0",
             "Scalar::Util" : "0",
             "Try::Tiny" : "0",
@@ -54,6 +56,7 @@
       },
       "test" : {
          "requires" : {
+            "AnyEvent::Socket" : "0",
             "Test::More" : "0.98"
          }
       }
