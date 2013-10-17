@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Maki-Daisuke/p5-JSON-RPC2-AnyEvent.png?branch=master)](https://travis-ci.org/Maki-Daisuke/p5-JSON-RPC2-AnyEvent)
 # NAME
 
 JSON::RPC2::AnyEvent - It's new $module
