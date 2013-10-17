@@ -67,16 +67,16 @@ sub _check_format {
     #    "n"  : when the value represents notification
     #    croak: when the value is in invalid format
     my $json = shift;
-    reftype $json eq 'HASH'                                                      or croak "JSON-RPC request MUST be an Object (hash)";
-    #$json->{jsonrpc} eq "2.0"                                                   or croak "Unsupported JSON-RPC version";  # This module supports only JSON-RPC 2.0 spec, but here just ignores this member.
-    exists $json->{method} && not ref $json->{method}                            or croak "`method' MUST be a String value";
+    reftype $json eq 'HASH'                                                                      or croak "JSON-RPC request MUST be an Object (hash)";
+    #$json->{jsonrpc} eq "2.0"                                                                   or croak "Unsupported JSON-RPC version";  # This module supports only JSON-RPC 2.0 spec, but here just ignores this member.
+    exists $json->{method} && not ref $json->{method}                                            or croak "`method' MUST be a String value";
     if ( exists $json->{params} ) {
-        reftype $json->{params} eq 'ARRAY' || reftype $json->{params} eq 'HASH'  or croak "`params' MUST be an array or an object";
+        (reftype $json->{params} // '') eq 'ARRAY' || (reftype $json->{params} // '') eq 'HASH'  or croak "`params' MUST be an array or an object";
     } else {
         $json->{params} = [];
     }
     return 'n' unless exists $json->{id};
-    not ref $json->{id}                                                          or croak "`id' MUST be neighter an array nor an object";
+    not ref $json->{id}                                                                          or croak "`id' MUST be neighter an array nor an object";
     return 'c';
 }
 
