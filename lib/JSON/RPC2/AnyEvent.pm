@@ -45,12 +45,12 @@ JSON::RPC2::AnyEvent - Yet-another, transport-independent and asynchronous JSON-
     my $res = $cv->recv;  # { jsonrpc => "2.0", id => 2, result => "Hello, Ryoko Kaminagi!" }
 
     # For Notification Request, just returns undef.
-    my $res = $srv->dispatch({
+    my $cv = $srv->dispatch({
         jsonrpc => "2.0",
         method  => "a_method",
         params  => ["some", "values"]
-    })->recv;  # Non-blocking when "id" is omitted.
-    not defined $res;  # true
+    });  # notification request when "id" is omitted.
+    not defined $cv;  # true
 
 
 =head1 DESCRIPTION
