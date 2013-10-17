@@ -122,8 +122,8 @@ sub register {
 
 sub _parse_argspec {
     my $orig = my $spec = shift;
-    if ( $spec =~ s/^\s*\[// ) {  # Wants array
-        croak "Invalid argspec. Unmatched '[' in argspec: $orig"  unless $spec =~ s/\]\s*$//;
+    if ( $spec =~ s/^\s*\[\s*// ) {  # Wants array
+        croak "Invalid argspec. Unmatched '[' in argspec: $orig"  unless $spec =~ s/\s*\]\s*$//;
         my @parts = split /\s*,\s*/, $spec;
         return sub{
             my $params = shift;
@@ -133,8 +133,8 @@ sub _parse_argspec {
             push @$args, $params->{$_}  foreach @parts;
             return $args;
         };
-    } elsif ( $spec =~ s/\s*\{// ) {  # Wants hash
-        croak "Invalid argspec. Unmatched '{' in argspec: $orig"  unless $spec =~ s/\}\s*$//;
+    } elsif ( $spec =~ s/\s*\{\s*// ) {  # Wants hash
+        croak "Invalid argspec. Unmatched '{' in argspec: $orig"  unless $spec =~ s/\s*\}\s*$//;
         my @parts = split /\s*,\s*/, $spec;
         return sub{
             my $params = shift;
