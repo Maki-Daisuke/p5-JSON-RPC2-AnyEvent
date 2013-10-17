@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Yet-another, transport-independent and asynchronous JSON-RPC 2.0 implementation",
    "author" : [
       "Daisuke (yet another) Maki <maki.daisuke@gmail.com>"
    ],

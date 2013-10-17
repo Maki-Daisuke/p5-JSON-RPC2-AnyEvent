@@ -51,8 +51,8 @@ sub dispatch {
             }, $json->{params});
             return $ret_cv;
         } else {  # Notification request (no response)
-            $method->(AE::cv{ $ret_cv->send(undef); }, $json->{params});
-            return $ret_cv;
+            $method->(AE::cv, $json->{params});  # pass dummy cv
+            return undef;
         }
     } catch {  # Invalid request
         my $err = _make_error_response((reftype $json eq 'HASH' ? $json->{id} : undef), ERR_INVALID_REQUEST, 'Invalid Request', shift);
@@ -117,6 +117,7 @@ sub register {
         my ($cv, $params) = @_;        
         $code->($cv, $spec->($params), $params);
     };
+    $self;
 }
 
 sub _parse_argspec {
@@ -159,32 +160,141 @@ __END__
 
 =head1 NAME
 
-JSON::RPC2::AnyEvent::Server - It's new $module
+JSON::RPC2::AnyEvent::Server - Yet-another, transport-independent, asynchronous and simple JSON-RPC 2.0 server
 
 =head1 SYNOPSIS
 
     use JSON::RPC2::AnyEvent::Server;
 
-    my $jra = JSON::RPC2::AnyEvent::Server->new;
-    $jra->register(a_method => "[param1, param2]" => sub{
-        my ($cv $args_arr, $original_args) = @_;
-        do_some_async_task(sub{
-            # Done!
-            $cv->send($result);
-        });
+    my $srv = JSON::RPC2::AnyEvent::Server->new(
+        hello => "[family_name, first_name]" => sub{  # This wants an array as its argument.
+            my ($cv, $args) = @_;
+            my ($family, $given) = @$args;
+            do_some_async_task(sub{
+                # Done!
+                $cv->send("Hello, $given $family!");
+            });
+        }
+    );
+
+    my $cv = $srv->dispatch({
+        jsonrpc => "2.0",
+        id      => 1,
+        method  => 'hello',
+        params  => [qw(Sogoru Kyo Gunner)],
     });
-    
-    my $cv = $j->dispatch($req);
+    my $res = $cv->recv;  # { jsonrpc => "2.0", id => 1, result => "Hello, Kyo Sogoru!" }
+
+    my $cv = $srv->dispatch({
+        jsonrpc => "2.0",
+        id      => 2,
+        method  => 'hello',
+        params  => {  # You can pass hash as well!
+            first_name  => 'Ryoko',
+            family_name => 'Kaminagi',
+            position    => 'Wizard'
+        }
+    });
+    my $res = $cv->recv;  # { jsonrpc => "2.0", id => 2, result => "Hello, Ryoko Kaminagi!" }
+
+    # You can add method separately.
+    $srv->register(wanthash => '{family_name, first_name}' => sub{
+        my ($cv, $args, $as_is) = @_;
+        $cv->send({args => $args, as_is => $as_is});
+    });
+
+    # So, how is params translated?
+    my $cv = $srv->dispatch({
+        jsonrpc => "2.0",
+        id      => 3,
+        method  => 'wanthash',
+        params  => [qw(Sogoru Kyo Gunner)],
+    });
     my $res = $cv->recv;
-    
+    # {
+    #     jsonrpc => "2.0",
+    #     id => 3,
+    #     result => {
+    #         args  => { family_name => 'Sogoru', first_name => "Kyo" },  # translated to a hash
+    #         as_is => ['Sogoru', 'Kyo', 'Gunner'],                       # original value
+    #     },
+    # }
+
+    my $cv = $srv->dispatch({
+        jsonrpc => "2.0",
+        id      => 4,
+        method  => 'wanthash',
+        params  => {first_name => 'Ryoko', family_name => 'Kaminagi', position => 'Wizard'},
+    });
+    my $res = $cv->recv;
+    # {
+    #     jsonrpc => "2.0",
+    #     id => 4,
+    #     result => {
+    #         args  => {first_name => 'Ryoko', family_name => 'Kaminagi', position => 'Wizard'}, # passed as-is
+    #         as_is => {first_name => 'Ryoko', family_name => 'Kaminagi', position => 'Wizard'},
+    #     },
+    # }
+
     # For Notification Request, just returns undef.
-    my $res = $jra->dispatch({jsonrpc => "2.0", method => "a_method", ["some", "values"]})->recv;  # Non-bloking when "id" is omitted.
-    not defined $res;  # true
+    my $cv = $srv->dispatch({
+        jsonrpc => "2.0",
+        method  => "hello",
+        params  => [qw(Misaki Shizuno)]
+    });
+    not defined $cv;  # true
 
 
 =head1 DESCRIPTION
 
-JSON::RPC2::AnyEvent::Server is ...
+JSON::RPC2::AnyEvent::Server provides asynchronous JSON-RPC 2.0 server implementation. This just provides an abstract
+JSON-RPC layer and you need to combine concrete transport protocol to utilize this module. If you are interested in
+stream protocol like TCP, refer to L<JSON::RPC2::AnyEvent::Server::Handle>.
+
+
+=head1 INTERFACE
+
+=head2 C<CLASS-E<gt>new( @args )> -> JSON::RPC2::AnyEvent::Server
+
+Create new instance of JSON::RPC2::AnyEvent::Server. Arguments are passed to C<register> method.
+
+=head2 C<$server-E<gt>register( $method_name =E<gt> $argspec =E<gt> $callback )> -> C<$self>
+
+Registers a subroutine as a JSON-RPC method of C<$server>.
+
+=over
+
+=item C<$method_name>:Str
+
+=item C<$argspec>:Str (optional)
+
+=item C<$callback>:CODE
+
+=back
+
+=head2 C<$server-E<gt>dispatch( $val )> -> (AnyEvent::Condvar | undef)
+
+Send C<$val> to C<$server> and execute corresponding method.
+
+=over
+
+=item C<$val>
+
+Any value to send, which looks like JSON data.
+
+=back
+
+
+=head1 SEE ALSO
+
+=over
+
+=item L<JSON::RPC2::AnyEvent>
+
+=item L<JSON::RPC2::AnyEvent::Server::Handle>
+
+=back
+
 
 =head1 LICENSE
 
