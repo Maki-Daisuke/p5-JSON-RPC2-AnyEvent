@@ -1,4 +1,4 @@
-package JSON::RPC::AnyEvent::Server::Handle;
+package JSON::RPC2::AnyEvent::Server::Handle;
 use 5.010;
 use strict;
 use warnings;
@@ -10,14 +10,14 @@ use Carp qw(croak);
 use Errno ();
 use Scalar::Util qw(blessed reftype openhandle);
 
-use JSON::RPC::AnyEvent::Server;
-use JSON::RPC::AnyEvent::Constants qw(ERR_PARSE_ERROR);
+use JSON::RPC2::AnyEvent::Server;
+use JSON::RPC2::AnyEvent::Constants qw(ERR_PARSE_ERROR);
 
 
 sub new {
     my ($class, $srv, $hdl) = @_;
     
-    croak "Not an JSON::RPC::AnyEvent::Server object: $srv"  unless blessed $srv && $srv->isa('JSON::RPC::AnyEvent::Server');
+    croak "Not an JSON::RPC2::AnyEvent::Server object: $srv"  unless blessed $srv && $srv->isa('JSON::RPC2::AnyEvent::Server');
     
     unless ( blessed $hdl && $hdl->isa('AnyEvent::Handle') ) {
         $hdl = openhandle $hdl  or croak "Neither AnyEvent::Handle nor open filehandle: $hdl";
@@ -48,14 +48,14 @@ sub new {
     $hdl->on_error(sub{
         my ($h, $fatal, $msg) = @_;
         if ( $! == Errno::EBADMSG ) {  # JSON Parse error
-            my $res = JSON::RPC::AnyEvent::_make_error_response(undef, ERR_PARSE_ERROR, 'Parse error');
+            my $res = JSON::RPC2::AnyEvent::_make_error_response(undef, ERR_PARSE_ERROR, 'Parse error');
             $h->push_write(json => $res);
         } elsif ( $self->{on_error} ){
             $self->{on_error}->($self, $fatal, $msg);
             $self->destroy if $fatal;
         } else {
             $self->destroy if $fatal;
-            croak "JSON::RPC::AnyEvent::Handle uncaught error: $msg";
+            croak "JSON::RPC2::AnyEvent::Handle uncaught error: $msg";
         }
     });
     
@@ -63,7 +63,7 @@ sub new {
 }
 
 
-sub JSON::RPC::AnyEvent::Server::dispatch_handle {
+sub JSON::RPC2::AnyEvent::Server::dispatch_handle {
     my ($self, $fh) = @_;
     __PACKAGE__->new($self, $fh);
 }
@@ -90,10 +90,10 @@ sub destroy {
     my ($self) = @_;
     $self->DESTROY;
     %$self = ();
-    bless $self, "JSON::RPC::AnyEvent::Server::Handle::destroyed";
+    bless $self, "JSON::RPC2::AnyEvent::Server::Handle::destroyed";
 }
 
-sub JSON::RPC::AnyEvent::Server::Handle::destroyed::AUTOLOAD {
+sub JSON::RPC2::AnyEvent::Server::Handle::destroyed::AUTOLOAD {
    #nop
 }
 
@@ -105,14 +105,14 @@ __END__
 
 =head1 NAME
 
-JSON::RPC::AnyEvent::Server::Handle - dispatch JSON-RPC requests comming from file-handle to JSON::RPC::AnyEvent::Server
+JSON::RPC2::AnyEvent::Server::Handle - dispatch JSON-RPC requests comming from file-handle to JSON::RPC2::AnyEvent::Server
 
 =head1 SYNOPSIS
 
     use AnyEvent::Socket;
-    use JSON::RPC::AnyEvent::Server::Handle;  # Add `dispatch_handle' method in JSON::RPC::AnyEvent::Server
+    use JSON::RPC2::AnyEvent::Server::Handle;  # Add `dispatch_handle' method in JSON::RPC2::AnyEvent::Server
     
-    my $srv = JSON::RPC::AnyEvent::Server->(
+    my $srv = JSON::RPC2::AnyEvent::Server->(
         echo => sub{
             my ($cv, $args) = @_;
             $cv->send($args);
@@ -121,9 +121,9 @@ JSON::RPC::AnyEvent::Server::Handle - dispatch JSON-RPC requests comming from fi
     
     my $w = tcp_server undef, 8080, sub {
         my ($fh, $host, $port) = @_;
-        my $hdl = $srv->dispatch_handle($fh);  # This is equivalent to JSON::RPC::AnyEvent::Server::Handle->new($srv, $fh)
+        my $hdl = $srv->dispatch_handle($fh);  # This is equivalent to JSON::RPC2::AnyEvent::Server::Handle->new($srv, $fh)
         $hdl->on_end(sub{
-            my $h = shift;  # JSON::RPC::AnyEvent::Server::Handle
+            my $h = shift;  # JSON::RPC2::AnyEvent::Server::Handle
             # underlying fh is already closed here
             $h->destroy;
             undef $hdl;
@@ -138,7 +138,7 @@ JSON::RPC::AnyEvent::Server::Handle - dispatch JSON-RPC requests comming from fi
 
 =head1 DESCRIPTION
 
-JSON::RPC::AnyEvent::Server::Handle is AnyEvent::Handle interface for JSON::RPC::AnyEvent::Server.
+JSON::RPC2::AnyEvent::Server::Handle is AnyEvent::Handle interface for JSON::RPC2::AnyEvent::Server.
 
 =head1 LICENSE
 

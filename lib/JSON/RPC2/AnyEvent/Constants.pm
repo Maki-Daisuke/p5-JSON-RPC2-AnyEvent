@@ -1,4 +1,4 @@
-package JSON::RPC::AnyEvent::Constants;
+package JSON::RPC2::AnyEvent::Constants;
 use 5.010;
 use strict;
 use warnings;

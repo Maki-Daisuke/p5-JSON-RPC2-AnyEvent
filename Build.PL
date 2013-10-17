@@ -23,8 +23,8 @@ my %args = (
         'Module::Build' => 0.38,
     },
 
-    name            => 'JSON-RPC-AnyEvent',
-    module_name     => 'JSON::RPC::AnyEvent',
+    name            => 'JSON-RPC2-AnyEvent',
+    module_name     => 'JSON::RPC2::AnyEvent',
     allow_pureperl => 0,
 
     script_files => [glob('script/*'), glob('bin/*')],

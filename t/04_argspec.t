@@ -1,10 +1,10 @@
 use strict;
 use Test::More;
 
-use JSON::RPC::AnyEvent::Server;
-use JSON::RPC::AnyEvent::Constants qw(:all);
+use JSON::RPC2::AnyEvent::Server;
+use JSON::RPC2::AnyEvent::Constants qw(:all);
 
-my $srv = JSON::RPC::AnyEvent::Server->new(
+my $srv = JSON::RPC2::AnyEvent::Server->new(
     hello => '[family_name, first_name]' => sub{
         my ($cv, $args) = @_;
         isa_ok($args, 'ARRAY');
@@ -21,7 +21,7 @@ my $srv = JSON::RPC::AnyEvent::Server->new(
         $cv->send($args);
     },
 );
-isa_ok $srv, 'JSON::RPC::AnyEvent::Server', 'new object';
+isa_ok $srv, 'JSON::RPC2::AnyEvent::Server', 'new object';
 
 
 my $res = $srv->dispatch({

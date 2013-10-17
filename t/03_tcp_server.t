@@ -5,10 +5,10 @@ use AnyEvent;
 use AnyEvent::Handle;
 use AnyEvent::Socket;
 
-use JSON::RPC::AnyEvent::Server::Handle;
+use JSON::RPC2::AnyEvent::Server::Handle;
 
 
-my $srv = JSON::RPC::AnyEvent::Server->new(
+my $srv = JSON::RPC2::AnyEvent::Server->new(
     echo => sub{
         my ($cv, $args) = @_;
         my $w; $w = AE::timer 1, 0, sub{ undef $w; $cv->send($args) };
@@ -20,14 +20,14 @@ my $srv = JSON::RPC::AnyEvent::Server->new(
         $cv->send($s);
     },
 );
-isa_ok $srv, 'JSON::RPC::AnyEvent::Server', 'new object';
+isa_ok $srv, 'JSON::RPC2::AnyEvent::Server', 'new object';
 
 
 my $end_cv = AE::cv;
 
 my $w = tcp_server undef, undef, sub {
     my ($fh, $host, $port) = @_;
-    my $hdl = $srv->dispatch_handle($fh);  # This is equivalent to JSON::RPC::AnyEvent::Server::Handle->new($srv, $fh)
+    my $hdl = $srv->dispatch_handle($fh);  # This is equivalent to JSON::RPC2::AnyEvent::Server::Handle->new($srv, $fh)
     $hdl->on_end(sub{
         $hdl->destroy;
         $end_cv->send("OK");

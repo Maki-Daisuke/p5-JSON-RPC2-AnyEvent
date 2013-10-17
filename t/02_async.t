@@ -2,10 +2,10 @@ use strict;
 use Test::More;
 
 use AnyEvent;
-use JSON::RPC::AnyEvent::Server;
-use JSON::RPC::AnyEvent::Constants qw(:all);
+use JSON::RPC2::AnyEvent::Server;
+use JSON::RPC2::AnyEvent::Constants qw(:all);
 
-my $srv = JSON::RPC::AnyEvent::Server->new(
+my $srv = JSON::RPC2::AnyEvent::Server->new(
     echo => sub{
         my ($cv, $args) = @_;
         my $w; $w = AE::timer 0.5, 0, sub{ undef $w; $cv->send($args) };
@@ -15,7 +15,7 @@ my $srv = JSON::RPC::AnyEvent::Server->new(
         my $w; $w = AE::timer 2.0, 0, sub{ undef $w; $cv->send("OK") };
     },
 );
-isa_ok $srv, 'JSON::RPC::AnyEvent::Server', 'new object';
+isa_ok $srv, 'JSON::RPC2::AnyEvent::Server', 'new object';
 
 
 my $first_flag = 1;

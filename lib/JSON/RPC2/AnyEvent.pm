@@ -1,8 +1,8 @@
-package JSON::RPC::AnyEvent;
+package JSON::RPC2::AnyEvent;
 
 our $VERSION = "0.01";
 
-use JSON::RPC::AnyEvent::Server;
+use JSON::RPC2::AnyEvent::Server;
 
 1;
 __END__
@@ -11,13 +11,13 @@ __END__
 
 =head1 NAME
 
-JSON::RPC::AnyEvent - It's new $module
+JSON::RPC2::AnyEvent - It's new $module
 
 =head1 SYNOPSIS
 
-    use JSON::RPC::AnyEvent::Server;
+    use JSON::RPC2::AnyEvent::Server;
 
-    my $jra = JSON::RPC::AnyEvent::Server->new;
+    my $jra = JSON::RPC2::AnyEvent::Server->new;
     $jra->register(a_method => "[param1, param2]" => sub{
         my ($cv $args_arr, $original_args) = @_;
         do_some_async_task(sub{
@@ -36,7 +36,7 @@ JSON::RPC::AnyEvent - It's new $module
 
 =head1 DESCRIPTION
 
-JSON::RPC::AnyEvent is ...
+JSON::RPC2::AnyEvent is ...
 
 =head1 LICENSE
 

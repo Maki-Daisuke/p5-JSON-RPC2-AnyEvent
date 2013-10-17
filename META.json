@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "JSON-RPC-AnyEvent",
+   "name" : "JSON-RPC2-AnyEvent",
    "no_index" : {
       "directory" : [
          "t",
@@ -65,12 +65,12 @@
    "release_status" : "unstable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/Maki-Daisuke/p5-JSON-RPC-AnyEvent/issues"
+         "web" : "https://github.com/Maki-Daisuke/p5-JSON-RPC2-AnyEvent/issues"
       },
-      "homepage" : "https://github.com/Maki-Daisuke/p5-JSON-RPC-AnyEvent",
+      "homepage" : "https://github.com/Maki-Daisuke/p5-JSON-RPC2-AnyEvent",
       "repository" : {
-         "url" : "https://github.com/Maki-Daisuke/p5-JSON-RPC-AnyEvent.git",
-         "web" : "https://github.com/Maki-Daisuke/p5-JSON-RPC-AnyEvent"
+         "url" : "https://github.com/Maki-Daisuke/p5-JSON-RPC2-AnyEvent.git",
+         "web" : "https://github.com/Maki-Daisuke/p5-JSON-RPC2-AnyEvent"
       }
    },
    "version" : "0.01"
