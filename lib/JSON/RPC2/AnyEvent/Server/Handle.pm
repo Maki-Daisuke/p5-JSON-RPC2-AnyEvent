@@ -8,6 +8,7 @@ our $VERSION = "0.01";
 use AnyEvent::Handle;
 use Carp qw(croak);
 use Errno ();
+use JSON;
 use Scalar::Util qw(blessed reftype openhandle);
 
 use JSON::RPC2::AnyEvent::Server;
