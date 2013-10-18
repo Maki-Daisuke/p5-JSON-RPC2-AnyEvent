@@ -47,8 +47,8 @@ JSON::RPC2::AnyEvent - Yet-another, transport-independent and asynchronous JSON-
     # For Notification Request, just returns undef.
     my $cv = $srv->dispatch({
         jsonrpc => "2.0",
-        method  => "a_method",
-        params  => ["some", "values"]
+        method  => "hello",
+        params  => ["Misaki", "Shizuno"]
     });  # notification request when "id" is omitted.
     not defined $cv;  # true
 
@@ -56,29 +56,28 @@ JSON::RPC2::AnyEvent - Yet-another, transport-independent and asynchronous JSON-
 =head1 DESCRIPTION
 
 JSON::RPC2::AnyEvent is yet-another JSON-RPC 2.0 implementation. This module is very similar to L<JSON::RPC2> and
-actually the main goal is the same. That is, transport independent, asynchronous, and light-weigh.
+actually shares the main goals. That is, transport independent, asynchronous, and light-weight.
 However, this module is designed so that it works with L<AnyEvent>, especially with L<AnyEvent::Handle>.
-
-Most of its API was inspired by L<JSON::RPC2> and added some, to allow objects as params for example.
 
 
 =head1 THINK SIMPLE
 
 JSON::RPC2::AnyEvent considers JSON-RPC as simple as possible. For example, L<JSON::RPC2::Server> abstracts JSON-RPC
-server as a kind of JSON filter. Unlike L<JSON::RPC2::Server> accepts and outputs serialized JSON text,
-L<JSON::RPC2::Server> accepts and outputs Perl data structure (array, hash, and scalar!). It accepts any kind of Perl
-data, then, outputs a JSON object as a hash:
+server as a kind of hash filter. Unlike L<JSON::RPC2::Server> accepts and outputs serialized JSON text,
+L<JSON::RPC2::AnyEvent::Server> accepts and outputs Perl hash:
 
                          +----------+
                          |          |
                 Inuput   | JSON-RPC |  Output
-       data   ---------->|  Server  |----------> JSON hash
-    (any kind)           |          |       (response object)
+      request ---------->|  Server  |----------> response
+    (as a hash)          |          |           (as a hash)
                          +----------+
 
-Response object can be either successful response or error response. Anyway, it's a hash! What you need to do is just
-to make or retrieve a JSON-like data structure in some way, and input it into the server, then, get the result as a
-JSON-like hash.
+Actually, it accepts any kind of Perl data (array, hash, and scalar!), then, outputs a JSON-like hash. Response hash can
+be either of successful response or error response. Anyway, it's a hash!
+
+What you need to do is just to make or retrieve a JSON-like data structure in some way, and input it into the server,
+then, get the result as a hash.
 
 Actually, JSON::RPC2::AnyEvent just treats Perl data structures instead of JSON, and has nothing to with serializing
 Perl data or deserializing JSON text. This concept allows you to use JSON-RPC on any kind of transport layer.

@@ -251,6 +251,23 @@ JSON::RPC2::AnyEvent::Server provides asynchronous JSON-RPC 2.0 server implement
 JSON-RPC layer and you need to combine concrete transport protocol to utilize this module. If you are interested in
 stream protocol like TCP, refer to L<JSON::RPC2::AnyEvent::Server::Handle>.
 
+=head1 THINK SIMPLE
+
+JSON::RPC2::AnyEvent considers JSON-RPC as simple as possible. For example, L<JSON::RPC2::Server> abstracts JSON-RPC
+server as a kind of hash filter. Unlike L<JSON::RPC2::Server> accepts and outputs serialized JSON text,
+L<JSON::RPC2::AnyEvent::Server> accepts and outputs Perl hash:
+
+                         +----------+
+                         |          |
+                Inuput   | JSON-RPC |  Output
+      request ---------->|  Server  |----------> response
+    (as a hash)          |          |           (as a hash)
+                         +----------+
+
+This has nothing to do with serializing Perl data or deserializing JSON text!
+
+See also L<JSON::RPC2::AnyEvent> for more information.
+
 
 =head1 INTERFACE
 
