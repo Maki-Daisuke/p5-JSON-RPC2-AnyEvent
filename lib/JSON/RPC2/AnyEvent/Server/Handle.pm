@@ -64,7 +64,7 @@ sub new {
 }
 
 
-sub JSON::RPC2::AnyEvent::Server::dispatch_handle {
+sub JSON::RPC2::AnyEvent::Server::dispatch_fh{
     my ($self, $fh) = @_;
     __PACKAGE__->new($self, $fh);
 }
@@ -111,7 +111,7 @@ JSON::RPC2::AnyEvent::Server::Handle - dispatch JSON-RPC requests comming from f
 =head1 SYNOPSIS
 
     use AnyEvent::Socket;
-    use JSON::RPC2::AnyEvent::Server::Handle;  # Add `dispatch_handle' method in JSON::RPC2::AnyEvent::Server
+    use JSON::RPC2::AnyEvent::Server::Handle;  # Add `dispatch_fh' method in JSON::RPC2::AnyEvent::Server
     
     my $srv = JSON::RPC2::AnyEvent::Server->(
         echo => sub{
@@ -122,7 +122,7 @@ JSON::RPC2::AnyEvent::Server::Handle - dispatch JSON-RPC requests comming from f
     
     my $w = tcp_server undef, 8080, sub {
         my ($fh, $host, $port) = @_;
-        my $hdl = $srv->dispatch_handle($fh);  # This is equivalent to JSON::RPC2::AnyEvent::Server::Handle->new($srv, $fh)
+        my $hdl = $srv->dispatch_fh($fh);  # equivalent to JSON::RPC2::AnyEvent::Server::Handle->new($srv, $fh)
         $hdl->on_end(sub{
             my $h = shift;  # JSON::RPC2::AnyEvent::Server::Handle
             # underlying fh is already closed here
@@ -139,7 +139,46 @@ JSON::RPC2::AnyEvent::Server::Handle - dispatch JSON-RPC requests comming from f
 
 =head1 DESCRIPTION
 
-JSON::RPC2::AnyEvent::Server::Handle is AnyEvent::Handle interface for JSON::RPC2::AnyEvent::Server.
+JSON::RPC2::AnyEvent::Server::Handle is AnyEvent::Handle adapter for JSON::RPC2::AnyEvent::Server.
+
+
+=head1 INTERFACE
+
+=head2 C<CLASS-E<gt>new($srv, $fh)> -> C<$handle>
+
+=head2 C<$srv-E<gt>dispatch_fh($fh)> -> C<$handle>
+
+Connect C<$fh> to C<$srv> and returns a JSON::RPC2::AnyEvent::Handle object.
+The object dispatches coming requests to C<$srv> and sends back returned response to C<$fh>.
+
+This module adds C<dispatch_fh> method in JSON::RPC2::AnyEvent::Server, which can be used as a shortcut of C<new>.
+
+=over
+
+=item C<$srv>: JSON::RPC2::AnyEvent::Server
+
+JSON::RPC2::AnyEvent::Server object to connect.
+
+=item C<$fh>: AnyEvent::Handle or file-handle
+
+File handle to be connected.
+
+=item C<$handle>: JSON::RPC2::AnyEvent::Server::Handle
+
+New JSON::RPC2::AnyEvent::Server::Handle object.
+
+=head2 C<$self-E<gt>on_end(sub{ my($self) = @_; ... })
+
+Registers callback called when the underlying file handle successfully reaches EOF.
+
+=head2 C<$self-E<gt>on_error(sub{ my($self, $fatal, $message) = @_; ... })
+
+Registers callback called when an error occurs during comminication.
+
+=head2 C<$self-E<gt>destroy>
+
+Manually destroys this object.
+
 
 =head1 LICENSE
 

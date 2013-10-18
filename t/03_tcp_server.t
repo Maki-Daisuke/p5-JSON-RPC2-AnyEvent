@@ -27,7 +27,7 @@ my $end_cv = AE::cv;
 
 my $w = tcp_server undef, undef, sub {
     my ($fh, $host, $port) = @_;
-    my $hdl = $srv->dispatch_handle($fh);  # This is equivalent to JSON::RPC2::AnyEvent::Server::Handle->new($srv, $fh)
+    my $hdl = $srv->dispatch_fh($fh);  # This is equivalent to JSON::RPC2::AnyEvent::Server::Handle->new($srv, $fh)
     $hdl->on_end(sub{
         $hdl->destroy;
         $end_cv->send("OK");
