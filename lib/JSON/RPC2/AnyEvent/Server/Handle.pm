@@ -167,11 +167,13 @@ File handle to be connected.
 
 New JSON::RPC2::AnyEvent::Server::Handle object.
 
-=head2 C<$self-E<gt>on_end(sub{ my($self) = @_; ... })
+=back
+
+=head2 C<$self-E<gt>on_end(sub{ my($self) = @_; ... })>
 
 Registers callback called when the underlying file handle successfully reaches EOF.
 
-=head2 C<$self-E<gt>on_error(sub{ my($self, $fatal, $message) = @_; ... })
+=head2 C<$self-E<gt>on_error(sub{ my($self, $fatal, $message) = @_; ... })>
 
 Registers callback called when an error occurs during comminication.
 
