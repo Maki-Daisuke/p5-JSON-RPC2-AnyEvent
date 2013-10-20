@@ -40,6 +40,7 @@ my $w = tcp_server undef, undef, sub {
     });
 }, sub{
     my (undef, $host, $port) = @_;
+	$host = 'localhost'  if $host eq '0.0.0.0';  # Cygwin returns '0.0.0.0' for host.
     my $w; $w = AE::timer 1, 0, sub{
         undef $w;
         tcp_connect $host => $port, sub{
