@@ -1,6 +1,6 @@
 package JSON::RPC2::AnyEvent;
 
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 use JSON::RPC2::AnyEvent::Server;
 
