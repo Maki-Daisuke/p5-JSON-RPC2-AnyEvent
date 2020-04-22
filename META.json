@@ -4,13 +4,13 @@
       "Daisuke (yet another) Maki <maki.daisuke@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.8.0, CPAN::Meta::Converter version 2.132830",
+   "generated_by" : "Minilla/v3.1.10, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : "2"
+      "version" : 2
    },
    "name" : "JSON-RPC2-AnyEvent",
    "no_index" : {
@@ -28,15 +28,14 @@
    "prereqs" : {
       "configure" : {
          "requires" : {
-            "CPAN::Meta" : "0",
-            "CPAN::Meta::Prereqs" : "0",
-            "Module::Build" : "0.38"
+            "Module::Build::Tiny" : "0.035"
          }
       },
       "develop" : {
          "requires" : {
             "Test::CPAN::Meta" : "0",
-            "Test::MinimumVersion" : "0.10108",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.07",
             "Test::Pod" : "1.41",
             "Test::Spellunker" : "v0.2.7"
          }
@@ -69,9 +68,12 @@
       },
       "homepage" : "https://github.com/Maki-Daisuke/p5-JSON-RPC2-AnyEvent",
       "repository" : {
-         "url" : "https://github.com/Maki-Daisuke/p5-JSON-RPC2-AnyEvent.git",
+         "type" : "git",
+         "url" : "git://github.com/Maki-Daisuke/p5-JSON-RPC2-AnyEvent.git",
          "web" : "https://github.com/Maki-Daisuke/p5-JSON-RPC2-AnyEvent"
       }
    },
-   "version" : "0.02"
+   "version" : "0.03",
+   "x_serialization_backend" : "JSON::PP version 4.02",
+   "x_static_install" : 1
 }
